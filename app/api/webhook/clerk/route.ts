@@ -70,7 +70,7 @@ export async function POST(req: Request) {
   
     // Creating a new user
     const newUser = await fetchUser(user);
-
+    console.log("new user before", newUser)
     if (newUser) {
       await clerkClient.users.updateUserMetadata(id, {
         publicMetadata: {

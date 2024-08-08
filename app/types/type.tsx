@@ -5,4 +5,13 @@ export interface UserType {
   email: string;
   imageUrl: string;
 }
-        
+
+interface Question  {
+  question: string;
+  answer: string[];
+  correctAnswer: string;
+};
+export interface QuestionType {
+  questions: Question[];
+  userId: string | undefined;
+};
