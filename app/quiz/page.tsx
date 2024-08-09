@@ -23,7 +23,8 @@ const Quizpage = async () => {
 
   return (
     <div>
-      <QuizComponent questions={questions} userId={userId}/>
+      <QuizComponent questionProp={questions} userId={userId}/>
+
     </div>
   );
 };

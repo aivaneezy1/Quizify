@@ -1,11 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { fetchUser } from "../(auth)/actions/fetchUser";
 import { QuestionType } from "../types/type";
 
-const QuizComponent = ({ questions, userId }: QuestionType) => {
+const QuizComponent = ({ questionProp, userId }: QuestionType) => {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState("");
+  const [answered, setAnswered] = useState(false);
+
+
+  // getting the current answer
+  const { questions, answer, correctAnswer } = questionProp[currentQuestionIndex];
+
   // Timer state
-  const [timeRemaining, setTimeRemaining] = useState(5);
+  const [timeRemaining, setTimeRemaining] = useState(10);
   const [timeRunning, setTimeRunning] = useState(false);
 
   const handleTimeStarted = () => {
@@ -17,19 +24,34 @@ const QuizComponent = ({ questions, userId }: QuestionType) => {
   };
 
   const handleResetTime = () => {
-    setTimeRemaining(25);
+    setTimeRemaining(10);
   };
 
   const handleTimeUp = () => {
     handleTimeEnded();
     handleResetTime();
-    // calling our next question function
-    //handleNextQuestion();
+
   };
 
+
+    // Next Question function
   const handleNextQuestion = () => {
-    handleTimeStarted(); // starting the time
+    // setting the index for the prev
+    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+    setSelectedAnswer("");
+    setAnswered(false);
+     // starting the time for the new question
+    handleTimeStarted();
   };
+
+
+  // Answer selected function
+  const handleAnswerSelected = (answer:string) =>{
+    setSelectedAnswer(answer);
+    setAnswered(true)
+  }
+
+
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -50,8 +72,40 @@ const QuizComponent = ({ questions, userId }: QuestionType) => {
   }, [timeRunning, timeRemaining]);
 
   return (
-    <div className="bg-blue-500 text-white text-2xl">
+    <div className="bg-blue-500 text-white text-2xl p-4">
       <h2>{timeRemaining} seconds to answer</h2>
+      <div className="mb-4">
+        <h3 className="text-xl font-bold mb-2">
+          {currentQuestionIndex + 1}. {questions}
+        </h3>
+        <ul>
+          {answer.map((ans, ansIndex) => (
+            <li key={ansIndex} className="text-lg">
+              <button
+                onClick={() => handleAnswerSelected(ans)}
+                disabled={answered}
+                className={`p-2 rounded ${
+                  answered && ans === correctAnswer
+                    ? "bg-green-500 text-white"
+                    : answered && ans !== selectedAnswer
+                    ? "bg-red-500 text-white"
+                    : ""
+                }`}
+              >
+                {ans}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {answered && (
+        <button
+          onClick={handleNextQuestion}
+          className="bg-blue-700 text-white py-2 px-4 rounded"
+        >
+          Next Question
+        </button>
+      )}
     </div>
   );
 };

@@ -7,11 +7,11 @@ export interface UserType {
 }
 
 interface Question  {
-  question: string;
+  questions: string;
   answer: string[];
   correctAnswer: string;
 };
 export interface QuestionType {
-  questions: Question[];
+  questionProp: Question[];
   userId: string | undefined;
 };
