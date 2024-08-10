@@ -1,28 +1,32 @@
-import { connectDB } from "@/app/lib/connectDb";
+  import { connectDB } from "@/app/lib/connectDb";
 import Quiz from "@/app/models/Quiz";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
-  const { userId, quizScore, correctAnswer, wrongAnswer } =
+  const { clerkId, quizScore, correctAnswer, wrongAnswer } =
     await request.json();
   if (request.method === "POST") {
     await connectDB();
     try {
       // Check if the user already has a quiz record
-      let existingUser = await Quiz.findOne({ userId });
-
+      let existingUser = await Quiz.findOne({ clerkId });
       if (existingUser) {
-        // Update the existing user’s quiz results
-        existingUser.quizScore += quizScore;
-        existingUser.correctAnswer += correctAnswer;
-        existingUser.wrongAnswer += wrongAnswer;
-
-        const updateResult = await existingUser.save();
+        const updateResult = await Quiz.findOneAndUpdate(
+          { clerkId: clerkId },
+          {
+            $set: {
+              quizScore: quizScore, // Set the score directly from the incoming data
+              correctAnswer: correctAnswer, // Set the correct answers directly from the incoming data
+              wrongAnswer: wrongAnswer, // Set the wrong answers directly from the incoming data
+            },
+          },
+          { new: true }
+        );
         return NextResponse.json({ updateResult });
       } else {
         // Create a new quiz record for the user
         const newUser = await Quiz.create({
-          userId,
+          clerkId,
           quizScore,
           correctAnswer,
           wrongAnswer,

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const QuizSchema = new mongoose.Schema({
-    userId: { type: String, required: true },
+    clerkId: { type: String, required: true },
     quizScore: { type: Number, default: 0 },
     correctAnswer: { type: Number, default: 0 },
     wrongAnswer: { type: Number, default: 0 },

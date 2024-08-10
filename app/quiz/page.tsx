@@ -1,30 +1,53 @@
-
-import React from "react";
+"use client";
+import React, { useContext } from "react";
+import { DatiContext } from "../provider/Provider";
 import QuizComponent from "../component/Quiz";
-import { client } from "@/sanity/lib/client";
-import { fetchUser } from "../(auth)/actions/fetchUser";
+import { getProgrammingData } from "../utils/getData";
+import { getAnimalData } from "../utils/getData";
+import { getGeographyData } from "../utils/getData";
+import { getScienceTechData } from "../utils/getData";
+import { getEasyArtData } from "../utils/getData";
+import { getSportsData } from "../utils/getData";
 
-export const dynamic = "force-dynamic";
+const handleCategory = () => {
+  const context = useContext(DatiContext);
 
-const getData = async () => {
-  const query = `*[_type == "questions"] {
-    questions,
-    answer,
-    correctAnswer}`;
+  if (!context) {
+    // Handle the case where context is not available
+    return [];
+  }
 
-  const data = await client.fetch(query);
+  const { selectedCategories } = context;
 
-  return data;
+  switch (selectedCategories) {
+    case "Animals":
+      return getAnimalData();
+    case "Programming":
+      return getProgrammingData();
+
+    case "Geography":
+      return getGeographyData();
+
+    case "Science & Technology":
+      return getScienceTechData();
+
+    case "Art":
+      return getEasyArtData();
+
+    case "Sports":
+      return getSportsData();
+
+    default:
+      return [];
+  }
 };
 
-const Quizpage = async () => {
-  const questions = await getData();
-  const userId = "23232"
+const Quizpage = () => {
+  const questions = handleCategory();
 
   return (
     <div>
-      <QuizComponent questionProp={questions} userId={userId}/>
-
+      <QuizComponent questionProp={questions} />
     </div>
   );
 };

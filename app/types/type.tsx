@@ -6,12 +6,19 @@ export interface UserType {
   imageUrl: string;
 }
 
-interface Question  {
-  questions: string;
-  answer: string[];
+interface Question {
+  id: number;
+  question: string;  // Change 'questions' to 'question'
+  answers: string[]; // Change 'answer' to 'answers'
   correctAnswer: string;
-};
+}
+
 export interface QuestionType {
   questionProp: Question[];
-  userId: string | undefined;
+ 
 };
+
+export interface StatsCardType {
+  title: string,
+  value: number
+}
