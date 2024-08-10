@@ -1,0 +1,12 @@
+import mongoose from "mongoose";
+
+const QuizSchema = new mongoose.Schema({
+    clerkId: { type: String, required: true },
+    quizScore: { type: Number, default: 0 },
+    correctAnswer: { type: Number, default: 0 },
+    wrongAnswer: { type: Number, default: 0 },
+});
+
+const QuizResult = mongoose.models.QuizResult || mongoose.model("QuizResult", QuizSchema);
+
+export default QuizResult;

@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
 import { fetchUser } from "@/app/(auth)/actions/fetchUser";
 import { NextResponse } from "next/server";
+import { UserType } from "@/app/types/type";
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
   }
 
   // Get the body
-  const payload = await req.json();
+  const payload = await req.json(); 
   const body = JSON.stringify(payload);
 
   // Create a new Svix instance with your secret.
@@ -53,22 +54,24 @@ export async function POST(req: Request) {
   // For this guide, you simply log the payload to the console
   const { id } = evt.data;
   const eventType = evt.type;
+
   if (eventType === "user.created") {
     // Fetching the data from clerk
     const { id, email_addresses, first_name, last_name, image_url } = evt.data;
 
     // Creating a User object with our User model and clerk data
-    const user = {
-      clerkId: id,
+    const user: UserType = {
+      clerkId: id,  
       firstName: first_name,
       lastName: last_name,
       email: email_addresses[0].email_address,
       imageUrl: image_url,
+    
     };
-    console.log(user);
+  
     // Creating a new user
     const newUser = await fetchUser(user);
-
+    console.log("new user before", newUser)
     if (newUser) {
       await clerkClient.users.updateUserMetadata(id, {
         publicMetadata: {
