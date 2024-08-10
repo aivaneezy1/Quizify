@@ -66,6 +66,7 @@ export async function POST(req: Request) {
       lastName: last_name,
       email: email_addresses[0].email_address,
       imageUrl: image_url,
+    
     };
   
     // Creating a new user

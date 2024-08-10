@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { QuestionType } from "../types/type";
 import { useAuth } from "@clerk/nextjs";
 import StatsCardComponent from "./StatsCard";
-
+import Link from "next/link";
 const QuizComponent = ({ questionProp }: QuestionType) => {
   const { userId } = useAuth();
 
@@ -40,7 +40,7 @@ const QuizComponent = ({ questionProp }: QuestionType) => {
   const handleTimeUp = () => {
     handleTimeEnded();
     handleResetTime();
-    handleNextQuestion();  // Automatically go to the next question when time is up
+    handleNextQuestion(); // Automatically go to the next question when time is up
   };
 
   const handleNextQuestion = () => {
@@ -118,10 +118,9 @@ const QuizComponent = ({ questionProp }: QuestionType) => {
       setTimeRunning(false); // Stop the timer when quiz is completed
     }
 
-    if(answered){
-      setTimeRunning(false)
+    if (answered) {
+      setTimeRunning(false);
     }
-
   }, [quizCompleted, answered]);
 
   const handlePlayAgain = () => {
@@ -142,48 +141,61 @@ const QuizComponent = ({ questionProp }: QuestionType) => {
     <>
       {quizCompleted ? (
         <>
-          <h2 className="text-center text-4xl font-bold mt-10">Your Result 📈</h2>
+          <h2 className="text-center text-4xl font-bold mt-10">
+            Your Result 📈
+          </h2>
           <div className="font-2xl grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-20">
             <div>
-              {" "}
               <StatsCardComponent
-                title="percentage"
-                value={(results.score/ (5 * questionProp.length)) * 100 }
+                title="Percentage"
+                value={(results.score / (5 * questionProp.length)) * 100}
               />
             </div>
             <div>
               <StatsCardComponent
-                title="Total Question"
+                title="Total Questions"
                 value={questionProp.length}
               />
             </div>
             <div>
               <StatsCardComponent title="Total Score" value={results.score} />
             </div>
-
             <div>
               <StatsCardComponent
-                title="Correct Answers "
+                title="Correct Answers"
                 value={results.correctAnswers}
               />
             </div>
-
             <div>
               <StatsCardComponent
-                title="Wrong Answers "
+                title="Wrong Answers"
                 value={results.wrongAnswers}
               />
             </div>
           </div>
-          <div className="flex items-center justify-center">
-            <div>
-              <button
-                onClick={handlePlayAgain}
-                className="bg-gradient-to-r from-green-500 to-green-700 text-white py-2 px-8 rounded-lg mt-4 shadow-md hover:bg-gradient-to-r hover:from-green-600 hover:to-green-800 transition-transform duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300"
-              >
-                Play Again
+          {!userId && (
+            <div className="flex items-center justify-center mt-10">
+            <p className="text-xl text-center mb-4 text-gray-700 font-semibold">
+              <span className="font-bold">
+                {" "}
+                <Link href="/signIn">Login</Link>{" "}
+              </span>
+              to keep track of your stats and climb the leaderboard.
+            </p>
+          </div>
+          )}
+          <div className="flex items-center justify-center space-x-4 mt-5">
+            <button
+              onClick={handlePlayAgain}
+              className="bg-gradient-to-r from-green-500 to-green-700 text-white py-2 px-8 rounded-lg shadow-md hover:bg-gradient-to-r hover:from-green-600 hover:to-green-800 transition-transform duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300"
+            >
+              Play Again
+            </button>
+            <Link href="/category">
+              <button className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-8 rounded-lg shadow-md hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-800 transition-transform duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                Change Categories
               </button>
-            </div>
+            </Link>
           </div>
         </>
       ) : (

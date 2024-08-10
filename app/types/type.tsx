@@ -4,6 +4,7 @@ export interface UserType {
   lastName?: string | null;
   email: string;
   imageUrl: string;
+  
 }
 
 interface Question {
